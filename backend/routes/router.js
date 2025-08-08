@@ -8,7 +8,7 @@ const shopController = require("../controllers/shop");
 const userController = require("../controllers/user");
 
 // Shop routes
-router.post("/shop", shopController);
+router.post("/shop", authAdmin , checkAdmin , shopController.shop);
 
 // User routes
 router.post("/user", userController.user);
