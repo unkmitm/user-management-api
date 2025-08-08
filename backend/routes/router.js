@@ -16,5 +16,7 @@ router.get("/allusers", userController.getAllUsers);
 router.get("/user/:id", userController.getUser);
 router.patch("/user/:id", authAdmin, checkAdmin, userController.updateUser);
 router.delete("/user/:id", authAdmin, checkAdmin, userController.deleteUser);
+
+router.post("/login", userController.login);
 // console.log(`Result is ${userController.deleteUser}`);
 module.exports = router;

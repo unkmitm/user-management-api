@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const user = async (req, res) => {
   try {
     // destructure
-    const { email, password, name , role } = req.body;
+    const { email, password, name, role } = req.body;
     if (!email || !password || !name) {
       throw new Error("All fields are required");
     }
@@ -16,12 +16,13 @@ const user = async (req, res) => {
       res.status(400).json({ msg: "User already exists" });
     }
 
-    const newUser = await User.create({ email, password, name , role });
+    const newUser = await User.create({ email, password, name, role });
     const token = newUser.createJWT();
 
-    await res
-      .status(200)
-      .json({ user: { id : newUser._id, name: newUser.name , role : newUser.role}, token });
+    await res.status(200).json({
+      user: { id: newUser._id, name: newUser.name, role: newUser.role },
+      token,
+    });
   } catch (err) {
     console.log(err);
   }
@@ -73,7 +74,7 @@ const updateUser = async (req, res) => {
 // bug is here
 const deleteUser = async (req, res) => {
   try {
-   const user = await User.findByIdAndDelete(req.params.id);
+    const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
@@ -84,4 +85,31 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { user, getAllUsers, getUser, updateUser, deleteUser };
+const login = async (req, res) => {
+	const { email, password } = req.body;
+	try {
+		const user = await User.findOne({ email });
+		if (!user) {
+			return res.status(400).json({ success: false, message: "Invalid credentials" });
+		}
+		const isPasswordValid = await bcrypt.compare(password, user.password);
+		if (!isPasswordValid) {
+			return res.status(400).json({ success: false, message: "Invalid credentials" });
+		}
+
+		res.status(200).json({
+      user : {
+        success : true , 
+        id : user._id,
+        email : user.email,
+        name : user.name,
+        role : user.role
+      }
+		});
+	} catch (error) {
+		console.log("Error in login ", error);
+		res.status(400).json({ success: false, message: error.message });
+	}
+};
+
+module.exports = { user, getAllUsers, getUser, updateUser, deleteUser, login };
