@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please add a password"],
   },
+  role: {
+    type: String,
+    enum: ["admin", "user"],
+    default: "user",
+  },
 });
 
 // Encrypt Password
@@ -27,7 +32,7 @@ userSchema.methods.pre = (next) => {
 // Create JWT
 userSchema.methods.createJWT = () => {
   return jwt.sign(
-    { id: this._id, name: this.name }, // payload
+    { id: this._id, name: this.name , role : this.role}, // payload
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_LIFETIME,
