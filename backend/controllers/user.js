@@ -6,7 +6,7 @@ const authAdmin = require("../middlewares/authAdmin");
 const user = async (req, res) => {
   try {
     // destructure
-    const { email, password, name } = req.body;
+    const { email, password, name , role } = req.body;
     if (!email || !password || !name) {
       throw new Error("All fields are required");
     }
@@ -18,11 +18,11 @@ const user = async (req, res) => {
       res.status(400).json({ msg: "User already exists" });
     }
 
-    const newUser = await User.create({ email, password, name });
+    const newUser = await User.create({ email, password, name , role });
     const token = newUser.createJWT();
     await res
       .status(200)
-      .json({ user: { id : newUser._id, name: newUser.name, pass: newUser.password }, token });
+      .json({ user: { id : newUser._id, name: newUser.name, pass: newUser.password , role : newUser.role}, token });
   } catch (err) {
     console.log(err);
   }
@@ -74,6 +74,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
+    console.log(req.user)
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }

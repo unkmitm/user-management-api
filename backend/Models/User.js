@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please add an email"],
+    unique: true,
   },
   password: {
     type: String,
@@ -22,26 +23,26 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Encrypt Password
-userSchema.methods.pre = (next) => {
-  const salt = bcrypt.genSaltSync(10);
-  this.password = bcrypt.hash(this.password, salt);
+// Pre-save hook to hash password
+userSchema.pre("save", async function(next) {
+  if (!this.isModified("password")) return next();
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
   next();
-};
+});
 
 // Create JWT
-userSchema.methods.createJWT = () => {
+userSchema.methods.createJWT = function () {
   return jwt.sign(
-    { id: this._id, name: this.name , role : this.role}, // payload
+    { id: this._id, name: this.name, role: this.role },
     process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_LIFETIME,
-    }
+    { expiresIn: process.env.JWT_LIFETIME }
   );
 };
 
 // Compare Password
-userSchema.methods.comparePassword = async function (password) {
+userSchema.methods.comparePassword = async function(password) {
   return await bcrypt.compare(password, this.password);
 };
 

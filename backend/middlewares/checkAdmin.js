@@ -1,6 +1,7 @@
 // admin 
 const checkAdmin = async (req, res, next) => {
   try {
+    console.log(req.user)
     if (req.user && req.user.role === "admin") {
       return next();
     }

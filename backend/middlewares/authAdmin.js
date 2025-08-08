@@ -11,7 +11,7 @@ const authenticateUser = (req, res, next) => {
     req.user = decoded; // Add the user object to the request
     next();
   } catch (err) {
-    return res.status(401).json({ msg: "Invalid token" });
+        return res.status(401).json({ msg: "Invalid token" });
   }
 };
 
