@@ -9,11 +9,14 @@ const database = require("./connection/connect");
 require("dotenv").config();
 const router = require("./routes/router");
 
+// routes
 app.use("/api/auth", router);
 app.use("/api/basket", router);
 
+// start srever
 const port = process.env.PORT || 3000;
 
+// add database
 const start = async () => {
   try {
     await database(process.env.MONGO_URI);

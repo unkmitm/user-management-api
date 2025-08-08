@@ -17,12 +17,14 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// Encrypt Password
 userSchema.methods.pre = (next) => {
   const salt = bcrypt.genSaltSync(10);
   this.password = bcrypt.hash(this.password, salt);
   next();
 };
 
+// Create JWT
 userSchema.methods.createJWT = () => {
   return jwt.sign(
     { id: this._id, password: this.password, name: this.name },
@@ -33,6 +35,7 @@ userSchema.methods.createJWT = () => {
   );
 };
 
+// Compare Password
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
