@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const authAdmin = require("../middlewares/authAdmin");
+const checkAdmin = require("../middlewares/checkAdmin");
+
 const shopController = require("../controllers/shop");
 const userController = require("../controllers/user");
 
@@ -11,7 +14,7 @@ router.get("/shop", shopController);
 router.post("/user", userController.user);
 router.get("/allusers", userController.getAllUsers);
 router.get("/user/:id", userController.getUser);
-router.patch("/user/:id", userController.updateUser);
-router.delete("/user/:id", userController.deleteUser);
+router.patch("/user/:id", authAdmin , checkAdmin ,userController.updateUser);
+router.delete("/user/:id", authAdmin , checkAdmin , userController.deleteUser);
 
 module.exports = router;
