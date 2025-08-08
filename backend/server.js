@@ -1,9 +1,24 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const morgan = require("morgan");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
+// security headers
 app.use(cors());
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // every 15 minutes
+    max: 100, // you can change it
+  })
+);
+app.use(helmet());
+
+// more middlewares
 app.use(express.json());
+app.use(morgan("dev"));
+
 const database = require("./connection/connect");
 
 require("dotenv").config();
