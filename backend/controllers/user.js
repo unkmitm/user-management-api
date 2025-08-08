@@ -132,7 +132,7 @@ const updateProfile = async (req, res) => {
 
     if (name) user.name = name;
     if (email) user.email = email;
-    if (password) user.password = password; // هش شدن تو pre save انجام میشه
+    if (password) user.password = password; 
 
     await user.save();
 
