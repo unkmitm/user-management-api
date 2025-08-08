@@ -4,6 +4,5 @@ const shop = require("../controllers/shop");
 const user = require("../controllers/user");
 
 router.get("/shop", shop);
-router.get("/user" , user)
-
+router.post("/user" , user)
 module.exports = router;
