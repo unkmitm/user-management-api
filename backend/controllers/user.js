@@ -70,4 +70,17 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { user, getAllUsers, getUser, updateUser };
+const deleteUser = async (req , res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    res.status(200).json({ msg: "User deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+}
+
+module.exports = { user, getAllUsers, getUser, updateUser , deleteUser};
