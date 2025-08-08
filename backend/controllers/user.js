@@ -1,7 +1,5 @@
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
-const checkAdmin = require("../middlewares/checkAdmin");
-const authAdmin = require("../middlewares/authAdmin");
 
 const user = async (req, res) => {
   try {
@@ -20,9 +18,11 @@ const user = async (req, res) => {
 
     const newUser = await User.create({ email, password, name , role });
     const token = newUser.createJWT();
+
+
     await res
       .status(200)
-      .json({ user: { id : newUser._id, name: newUser.name, pass: newUser.password , role : newUser.role}, token });
+      .json({ user: { id : newUser._id, name: newUser.name , role : newUser.role}, token });
   } catch (err) {
     console.log(err);
   }

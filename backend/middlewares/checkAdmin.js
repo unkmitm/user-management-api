@@ -3,6 +3,7 @@ const checkAdmin = async (req, res, next) => {
   try {
     console.log(req.user)
     if (req.user && req.user.role === "admin") {
+      console.log(req.user)
       return next();
     }
     return res.status(403).json({ msg: "Access denied. Admins only." });
