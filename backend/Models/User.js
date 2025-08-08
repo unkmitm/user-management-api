@@ -27,7 +27,7 @@ userSchema.methods.pre = (next) => {
 // Create JWT
 userSchema.methods.createJWT = () => {
   return jwt.sign(
-    { id: this._id, password: this.password, name: this.name }, // payload , remove the password
+    { id: this._id, name: this.name }, // payload
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_LIFETIME,
