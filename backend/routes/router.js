@@ -17,5 +17,8 @@ router.get("/user/:id", userController.getUser);
 router.patch("/user/:id", authAdmin, checkAdmin, userController.updateUser);
 router.delete("/user/:id", authAdmin, checkAdmin, userController.deleteUser);
 
+// Check user profile
+router.patch("/user/profile", authAdmin, userController.updateProfile);
+
 router.post("/login", userController.login);
 module.exports = router;

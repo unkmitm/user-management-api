@@ -12,7 +12,7 @@ const user = async (req, res) => {
 
     // check if user already exists
     const userAlreadyExists = await User.findOne({ email });
-  
+
     if (userAlreadyExists) {
       res.status(400).json({ msg: "User already exists" });
     }
@@ -120,6 +120,37 @@ const login = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, email, password } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (password) user.password = password; // هش شدن تو pre save انجام میشه
+
+    await user.save();
+
+    res.status(200).json({ msg: "Profile updated successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
 // Reset Password , Remember Me  ( Soon )
 
-module.exports = { user, getAllUsers, getUser, updateUser, deleteUser, login };
+module.exports = {
+  user,
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  login,
+  updateProfile,
+};

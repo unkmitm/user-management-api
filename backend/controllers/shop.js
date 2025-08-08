@@ -3,8 +3,8 @@ const Shop = require("../Models/Shop");
 const shop = async (req, res) => {
   try {
     const items = { ...req.body };
-    const colors = items.colors ? items.colors.split(",") : [];
-    const categories = items.categories ? items.categories.split(",") : [];
+    // const colors = items.colors ? items.colors.split(",") : [];
+    // const categories = items.categories ? items.categories.split(",") : [];
 
     const checkItem = await Shop.findOne({ name: items.name });
     if (checkItem) {
