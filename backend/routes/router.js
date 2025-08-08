@@ -8,7 +8,7 @@ const shopController = require("../controllers/shop");
 const userController = require("../controllers/user");
 
 // Shop routes
-router.get("/shop", shopController);
+router.post("/shop", shopController);
 
 // User routes
 router.post("/user", userController.user);

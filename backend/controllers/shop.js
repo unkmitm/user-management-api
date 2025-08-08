@@ -1,5 +1,13 @@
-const shop = (req, res) => {
-    res.send("Hello from the basket!");
-}
+const Shop = require("../Models/Shop");
 
-module.exports = shop
+const shop = async (req, res) => {
+  const items = { ...req.body };
+
+  const checkItem = await Shop.findOne({ name: items.name });
+  if (checkItem) {
+    return res.status(400).json({ msg: "Item already exists" });
+  }
+
+};
+
+module.exports = shop;
