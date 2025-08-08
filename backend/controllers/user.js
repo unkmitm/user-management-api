@@ -1,10 +1,9 @@
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
+const checkAdmin = require("../middlewares/checkAdmin");
 
 const user = async (req, res) => {
   try {
-    const user = await User.create({ ...req.body });
-
     // destructure
     const { email, password, name } = req.body;
     if (!email || !password || !name) {
@@ -15,13 +14,14 @@ const user = async (req, res) => {
     const userAlreadyExists = await User.findOne({ email });
 
     if (userAlreadyExists) {
-      throw new Error(`User already exists ${userAlreadyExists}`);
+      res.status(400).json({ msg: "User already exists" });
     }
 
-    const token = user.createJWT();
+    const newUser = await User.create({ email, password, name });
+    const token = newUser.createJWT();
     await res
       .status(200)
-      .json({ user: { name: user.name, pass: user.password }, token });
+      .json({ user: { name: newUser.name, pass: newUser.password }, token });
   } catch (err) {
     console.log(err);
   }
@@ -47,7 +47,7 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const updates = {...req.body };
+    const updates = { ...req.body };
 
     if (updates.password) {
       const salt = await bcrypt.genSalt(10);
@@ -70,7 +70,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req , res) => {
+const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
@@ -81,6 +81,6 @@ const deleteUser = async (req , res) => {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
-}
+};
 
-module.exports = { user, getAllUsers, getUser, updateUser , deleteUser};
+module.exports = { user, getAllUsers, getUser, updateUser, deleteUser };
