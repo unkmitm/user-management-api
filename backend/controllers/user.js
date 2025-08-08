@@ -123,7 +123,11 @@ const login = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { name, email, password } = req.body;
+    const { name, email, password , role } = req.body;
+
+    if (role) {
+      return res.status(404).json({ msg: "Role update not allowed By Users" });
+    }
 
     const user = await User.findById(userId);
     if (!user) {
