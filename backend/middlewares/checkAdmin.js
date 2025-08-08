@@ -2,11 +2,13 @@
 const checkAdmin = async (req, res, next) => {
   try {
     if (req.user && req.user.role === "admin") {
-      next();
+      return next();
     }
-  } catch (err) {
     return res.status(403).json({ msg: "Access denied. Admins only." });
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error" });
   }
 };
+
 
 module.exports = checkAdmin;
