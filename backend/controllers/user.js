@@ -1,4 +1,5 @@
 const User = require("../Models/User");
+const bcrypt = require("bcrypt");
 
 const user = async (req, res) => {
   try {
@@ -44,4 +45,29 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { user, getAllUsers, getUser };
+const updateUser = async (req, res) => {
+  try {
+    const updates = {...req.body };
+
+    if (updates.password) {
+      const salt = await bcrypt.genSalt(10);
+      updates.password = await bcrypt.hash(updates.password, salt);
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ userUpdate: user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+module.exports = { user, getAllUsers, getUser, updateUser };

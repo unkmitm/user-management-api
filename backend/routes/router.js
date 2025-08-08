@@ -11,5 +11,6 @@ router.get("/shop", shopController);
 router.post("/user", userController.user);
 router.get("/allusers", userController.getAllUsers);
 router.get("/user/:id", userController.getUser);
+router.patch("/user/:id", userController.updateUser);
 
 module.exports = router;
