@@ -1,4 +1,4 @@
-// admin 
+// Check Admin MiddleWare
 const checkAdmin = async (req, res, next) => {
   try {
     if (req.user && req.user.role === "admin") {

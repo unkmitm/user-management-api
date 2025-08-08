@@ -1,6 +1,7 @@
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
 
+// Post User
 const user = async (req, res) => {
   try {
     // destructure
@@ -28,15 +29,16 @@ const user = async (req, res) => {
   }
 };
 
+// Get All Users
 const getAllUsers = async (req, res) => {
   try {
-    const user = await User.find({});
-    res.status(200).json(user);
+    const users = await User.find({});
+    res.status(200).json(users);
   } catch (err) {
     console.log(err);
   }
 };
-
+// Get Single User
 const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -46,6 +48,7 @@ const getUser = async (req, res) => {
   }
 };
 
+// update User with patch
 const updateUser = async (req, res) => {
   try {
     const updates = { ...req.body };
@@ -71,7 +74,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-// bug is here
+// delete User
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -85,31 +88,38 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// login
 const login = async (req, res) => {
-	const { email, password } = req.body;
-	try {
-		const user = await User.findOne({ email });
-		if (!user) {
-			return res.status(400).json({ success: false, message: "Invalid credentials" });
-		}
-		const isPasswordValid = await bcrypt.compare(password, user.password);
-		if (!isPasswordValid) {
-			return res.status(400).json({ success: false, message: "Invalid credentials" });
-		}
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
+    }
 
-		res.status(200).json({
-      user : {
-        success : true , 
-        id : user._id,
-        email : user.email,
-        name : user.name,
-        role : user.role
-      }
-		});
-	} catch (error) {
-		console.log("Error in login ", error);
-		res.status(400).json({ success: false, message: error.message });
-	}
+    res.status(200).json({
+      user: {
+        success: true,
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.log("Error in login ", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
+
+// Reset Password , Remember Me  ( Soon )
 
 module.exports = { user, getAllUsers, getUser, updateUser, deleteUser, login };
