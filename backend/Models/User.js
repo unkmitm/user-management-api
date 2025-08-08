@@ -24,24 +24,21 @@ const userSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to hash password
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
 
+userSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 // Create JWT
 userSchema.methods.createJWT = function () {
-  const token = jwt.sign(
+  return jwt.sign(
     { id: this._id, name: this.name, role: this.role },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_LIFETIME }
   );
-  console.log(token);
-  return token;
 };
+
 
 // Compare Password
 userSchema.methods.comparePassword = async function (password) {

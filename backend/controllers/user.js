@@ -19,7 +19,6 @@ const user = async (req, res) => {
     const newUser = await User.create({ email, password, name , role });
     const token = newUser.createJWT();
 
-
     await res
       .status(200)
       .json({ user: { id : newUser._id, name: newUser.name , role : newUser.role}, token });
@@ -71,10 +70,10 @@ const updateUser = async (req, res) => {
   }
 };
 
+// bug is here
 const deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    console.log(req.user)
+   const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
